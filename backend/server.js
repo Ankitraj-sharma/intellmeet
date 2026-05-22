@@ -59,6 +59,12 @@ app.use((req, res, next) => {
   });
   next();
 });
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'IntellMeet API Running'
+  })
+})
 
 // ===== SECURITY MIDDLEWARE =====
 app.use(helmet({
