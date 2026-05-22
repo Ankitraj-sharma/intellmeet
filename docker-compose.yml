@@ -1,0 +1,99 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: intellmeet_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS:-changeme}
+      MONGO_INITDB_DATABASE: intellmeet
+    volumes:
+      - mongo_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks: [intellmeet_net]
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: intellmeet_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-changeme}
+    volumes: [redis_data:/data]
+    networks: [intellmeet_net]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: intellmeet_backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://${MONGO_ROOT_USER:-admin}:${MONGO_ROOT_PASS:-changeme}@mongodb:27017/intellmeet?authSource=admin
+      REDIS_URL: redis://:${REDIS_PASSWORD:-changeme}@redis:6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports: ["5000:5000"]
+    networks: [intellmeet_net]
+    volumes: [backend_logs:/app/logs]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: intellmeet_frontend
+    restart: unless-stopped
+    depends_on: [backend]
+    ports: ["80:80"]
+    networks: [intellmeet_net]
+
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: intellmeet_prometheus
+    restart: unless-stopped
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    ports: ["9090:9090"]
+    networks: [intellmeet_net]
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: intellmeet_grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+    volumes: [grafana_data:/var/lib/grafana]
+    ports: ["3000:3000"]
+    depends_on: [prometheus]
+    networks: [intellmeet_net]
+
+networks:
+  intellmeet_net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  redis_data:
+  backend_logs:
+  prometheus_data:
+  grafana_data:

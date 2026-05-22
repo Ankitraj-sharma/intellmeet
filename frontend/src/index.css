@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #0f0f1a;
+    --bg-secondary: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-elevated: #1e2a4a;
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border: #2d3748;
+    --border-subtle: #1e2a3a;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+  }
+
+  * { @apply border-slate-700; }
+  
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Outfit', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #313244; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #45475a; }
+
+  ::selection { background: rgba(99, 102, 241, 0.3); }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10;
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    @apply rounded-2xl;
+  }
+  .btn-primary {
+    background: var(--accent);
+    @apply text-white font-semibold px-4 py-2 rounded-xl hover:bg-indigo-500 transition-all duration-200 active:scale-95;
+  }
+  .btn-ghost {
+    @apply text-slate-300 px-4 py-2 rounded-xl hover:bg-white/10 transition-all duration-200;
+  }
+  .input {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    @apply w-full text-slate-200 rounded-xl px-4 py-3 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 transition-colors;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+  .badge-success { @apply badge bg-emerald-500/15 text-emerald-400; }
+  .badge-warning { @apply badge bg-amber-500/15 text-amber-400; }
+  .badge-error { @apply badge bg-red-500/15 text-red-400; }
+  .badge-info { @apply badge bg-blue-500/15 text-blue-400; }
+  .badge-purple { @apply badge bg-indigo-500/15 text-indigo-400; }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent;
+  }
+  .glow {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  }
+}

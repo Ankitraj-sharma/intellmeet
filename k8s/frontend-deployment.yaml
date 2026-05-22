@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intellmeet-frontend
+  namespace: intellmeet
+  labels:
+    app: intellmeet
+    component: frontend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: intellmeet
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: intellmeet
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/your-org/intellmeet/frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101  # nginx user
+            allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: intellmeet-frontend
+  namespace: intellmeet
+spec:
+  selector:
+    app: intellmeet
+    component: frontend
+  ports:
+    - port: 80
+      targetPort: 80
