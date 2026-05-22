@@ -104,13 +104,22 @@ app.use(
     crossOriginEmbedderPolicy: false,
   })
 );
-
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: [
+      'http://localhost:5173',
+      'https://intellmeet-eosin.vercel.app',
+    ],
+
     credentials: true,
+
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+    ],
   })
 );
 
