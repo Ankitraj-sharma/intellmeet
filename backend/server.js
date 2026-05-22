@@ -1,3 +1,4 @@
+const { connectRedis } = require('./config/redis')
 require('dotenv').config();
 const http = require('http');
 const express = require('express');
@@ -9,8 +10,8 @@ const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const { collectDefaultMetrics, Registry, Counter, Histogram } = require('prom-client');
 
-const connectDB = require('./config/db');
-const { connectRedis } = require('./config/redis');
+const connectDB = require('./config/db')
+const { connectRedis } = require('./config/redis')
 const { initializeSocket } = require('./services/socketService');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { globalLimiter } = require('./middleware/rateLimiter');
@@ -138,7 +139,9 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     await connectDB();
-    connectRedis();
+
+    await connectRedis();
+
     const io = initializeSocket(httpServer);
     
     // Make io accessible throughout the app
@@ -149,8 +152,8 @@ const startServer = async () => {
 ╔═══════════════════════════════════════════╗
 ║     IntellMeet API Server Started         ║
 ╠═══════════════════════════════════════════╣
-║  Port:        ${PORT}                          ║
-║  Environment: ${process.env.NODE_ENV || 'development'}               ║
+║  Port:        ${PORT}                     ║
+║  Environment: ${process.env.NODE_ENV || 'development'} ║
 ║  Health:      /health                     ║
 ║  Metrics:     /metrics                    ║
 ╚═══════════════════════════════════════════╝

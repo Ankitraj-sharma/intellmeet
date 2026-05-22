@@ -14,11 +14,21 @@
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f"
   },
-  "keywords": ["mern", "meetings", "ai", "webrtc", "socket.io", "enterprise"],
+  "keywords": [
+    "mern",
+    "meetings",
+    "ai",
+    "webrtc",
+    "socket.io",
+    "enterprise"
+  ],
   "author": "Zidio Development",
   "license": "MIT",
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "redis": "^5.12.1"
   }
 }

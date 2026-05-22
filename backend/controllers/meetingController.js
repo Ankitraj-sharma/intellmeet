@@ -2,7 +2,7 @@ const Meeting = require('../models/Meeting');
 const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
-const { getRedis } = require('../config/redis');
+const { getRedis } = require('../config/redis')
 const aiService = require('../services/aiService');
 const logger = require('../utils/logger');
 

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
-const { getRedis } = require('../config/redis');
+const { getRedis } = require('../config/redis')
 
 const protect = async (req, res, next) => {
   try {

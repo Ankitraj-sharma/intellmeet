@@ -3,7 +3,7 @@ const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const logger = require('../utils/logger');
 const jwt = require('jsonwebtoken');
-const { getRedis } = require('../config/redis');
+const { getRedis } = require('../config/redis')
 const crypto = require('crypto');
 
 const generateTokens = (user) => ({
