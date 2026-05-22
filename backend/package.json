@@ -29,6 +29,7 @@
     "nodemailer": "^6.9.7",
     "openai": "^4.20.1",
     "prom-client": "^15.1.0",
+    "redis": "^5.12.1",
     "socket.io": "^4.6.2",
     "uuid": "^9.0.1",
     "winston": "^3.11.0"
